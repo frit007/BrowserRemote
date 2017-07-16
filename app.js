@@ -7,7 +7,6 @@ var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var mysql = require('mysql');
 
-var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
@@ -74,8 +73,9 @@ app.use(sessionMiddleware);
 
 /*---------------- SETUP ROUTES ----------------*/
 var authRoutes = require('./SocketUser/routes/auth')(users);
+var indexRoutes = require('./routes/index')(users);
 
-app.use('/', index);
+app.use('/', indexRoutes);
 // app.use('/users', users);
 app.use('/auth', authRoutes);
 
