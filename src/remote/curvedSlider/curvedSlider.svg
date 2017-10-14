@@ -1,0 +1,18 @@
+<svg id="curved-volume" xmlns="http://www.w3.org/2000/svg" width="96.736" height="260.876" viewBox="0 0 25.594634 69.023397">
+    <defs>
+        <mask maskUnits="userSpaceOnUse" id="volume-bar-mask">
+            <path id="volume-bar-mask-path" fill="#fff" stroke-width="0" stroke-linecap="round" stroke-linejoin="round" paint-order="markers stroke fill" d="M-2.93 48.736h33.477V69.41H-2.93z"/>
+        </mask>
+    </defs>
+    <path id="curved-volume-slider" class="slider" d="M19.877 62.256A32.95 32.95 0 0 1 4.723 34.5 32.95 32.95 0 0 1 19.92 6.768" fill="none" stroke="#000" stroke-width="4.967" stroke-linecap="round" stroke-linejoin="round"/>
+    <path id="curved-volume-slider-selected" d="M22.68 66.168a37.595 37.595 0 0 1-17.29-31.67A37.595 37.595 0 0 1 22.726 2.857" mask="url(#volume-bar-mask)" transform="matrix(.87643 0 0 .87643 0 4.265)" fill="none" stroke="#c700aa" stroke-width="5.668" stroke-linecap="round" stroke-linejoin="round"/>
+    <g draggable="true" id="volume-group">
+        <ellipse id="volume-button" class="volume-button grabbable" ry="5.261" rx="4.915" cy="33.104" cx="4.915" fill="red"/>
+        <g class="volume-icon" stroke="#111" stroke-width=".64" paint-order="markers stroke fill">
+            <path class="filled" d="M3.257 34.11L5.1 35.7v-5.186l-1.817 1.57H1.565v2.023z" fill="#111" stroke-linejoin="round" paint-order="markers stroke fill" stroke-width=".5298368"/>
+            <path id="volume-bar-1" class="volume-bar" d="M6.025 34.25c.204-.33.323-.714.323-1.13 0-.42-.122-.81-.33-1.142" fill="none" stroke-linecap="round" paint-order="markers stroke fill" stroke-width=".5298368"/>
+            <path id="volume-bar-2" class="volume-bar" d="M6.76 31.232c.393.528.625 1.182.625 1.89 0 .7-.228 1.348-.613 1.873" fill="none" stroke-linecap="round" paint-order="markers stroke fill" stroke-width=".5298368"/>
+            <path id="volume-bar-3" class="volume-bar" d="M7.463 35.687c.558-.705.892-1.598.892-2.566 0-.974-.34-1.87-.903-2.58" fill="none" stroke-linecap="round" paint-order="markers stroke fill" stroke-width=".5298368"/>
+        </g>
+    </g>
+</svg>

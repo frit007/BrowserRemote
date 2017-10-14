@@ -1,0 +1,49 @@
+@import '../../variables';
+
+// .curved_volume 
+.slider {
+    stroke: $primary;
+}
+
+.grabbable {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+ /* (Optional) Apply a "closed-hand" cursor during drag operation. */
+.grabbable:active { 
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+.volume-button{
+    fill: $secondary;
+}
+.volume-button *{
+    // Pass through pointer events
+    pointer-events: none;
+}
+.volume-icon {
+    stroke: $secondary-text; 
+    // Pass through pointer events
+    pointer-events: none;
+}
+
+.volume-icon .filled {
+    fill: $secondary-text;
+}
+
+.volume-bar {
+    transition: opacity 300ms;
+}
+
+#curved-volume-slider {
+    stroke: $primary-light;
+}
+
+#curved-volume-slider-selected {
+    stroke: $primary-dark;
+}

@@ -18,6 +18,8 @@ function getDBEnv(envName) {
 	return process.env[prefix + envName];
 }
 
+
+
 var config = {
 	db: {
 		host: getDBEnv("HOST"),
@@ -36,12 +38,22 @@ var config = {
 	session: {
 		secret: process.env.SESSION_SECRET
 	},
+	no_network: process.env.NO_NETWORK || false,
 	debug: true
 }
 
-var mysqlPool = mysql.createPool(config.db);
-var users = require('./SocketUser/modules/users.js')(mysqlPool, config);
+/*---------------- SETUP SESSION ----------------*/
+var expressSession = require('express-session');
+sessionMiddleware = expressSession({
+  secret: config.session.secret,
+  saveUninitialized: false,
+  resave: false
+});
 
+
+var mysqlPool = mysql.createPool(config.db);
+var users = require('./SocketUser/modules/socket-users.js')(mysqlPool, sessionMiddleware, config);
+var RemoteManager = require('./modules/remote.js')(mysqlPool, users);
 
 
 
@@ -52,68 +64,66 @@ app.set('view engine', 'hbs');
 
 
 
-/*---------------- SETUP SESSION ----------------*/
-var expressSession = require('express-session');
-sessionMiddleware = expressSession({
-  secret: config.session.secret,
-  saveUninitialized: false,
-  resave: false
-});
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(sessionMiddleware);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(sessionMiddleware);
 
 
 /*---------------- SETUP ROUTES ----------------*/
 var authRoutes = require('./SocketUser/routes/auth')(users);
 var indexRoutes = require('./routes/index')(users);
+var remoteRoutes = require('./routes/remote')(users);
 
 app.use('/', indexRoutes);
 // app.use('/users', users);
 app.use('/auth', authRoutes);
+app.use('/remote', remoteRoutes);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+	var err = new Error('Not Found');
+	err.status = 404;
+	next(err);
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+	// set locals, only providing error in development
+	res.locals.message = err.message;
+	res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+	// render the error page
+	res.status(err.status || 500);
+	res.render('error');
 });
 
 /**
  * Normalize a port into a number, string, or false.
  */
 function normalizePort(val) {
-  var port = parseInt(val, 10);
+	var port = parseInt(val, 10);
 
-  if (isNaN(port)) {
-    // named pipe
-    return val;
-  }
+	if (isNaN(port)) {
+	// named pipe
+	return val;
+	}
 
-  if (port >= 0) {
-    // port number
-    return port;
-  }
+	if (port >= 0) {
+	// port number
+	return port;
+	}
 
-  return false;
+	return false;
 }
 
 /**
@@ -138,4 +148,14 @@ var server = http.createServer(app);
 var socket = require('socket.io')(server);
 
 
-module.exports = app;
+// socket.on('connection', function(client) {
+// 	console.log(client);
+// })
+// var ns = socket.on('socket.io');
+// ns.on('connection', function(c) {
+// 	console.log(c);
+// })
+require("./sockets/remote")(users, socket);
+
+
+module.exports = server;

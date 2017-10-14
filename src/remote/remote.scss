@@ -1,0 +1,166 @@
+@import '../variables';
+
+
+
+* {
+	box-sizing: border-box;
+	margin:0;
+	padding:0;
+}
+
+.circle {
+    border-radius: 50%;
+    shape-outside: circle(50%);
+    shape-outside: circle(50%);
+}
+
+
+.play {
+    position:absolute;
+    background-color: $primary;
+    
+/*        Center in screen*/
+    top:$playTop*1vh;
+    left:$playLeft*1vw;
+
+    height: $playDiameter*1vw;
+    width: $playDiameter*1vw;
+      transform: translate(-50%, -50%);
+    // transform: translate(-$playRadius*1vw, -$playRadius*1vw);
+}
+
+.rightCircle {
+    @extend .circle;
+    height: $rightCircleDiameter * 1vw;
+    width: $rightCircleDiameter * 1vw;
+    transform: translate(-$rightCircleRadius * 1vw, -$rightCircleRadius * 1vw);
+
+    
+
+}
+
+.transition-one-second {
+    @include transition(all, 500ms);
+}
+
+.options {
+    position:absolute;
+    background-color: $primary;
+	z-index: $layer-ground;
+    
+/*  circle center(25vh) + circle radius(25vh) + space(5vh) */
+    left:80vw;
+
+/*  circle center (50 vh) */
+    // top:20vh;
+    top: calc(#{$playTop*1vh} - #{$playRadius*1vw} - 5vh);
+
+    // height: $rightCircleDiameter * 1vw;
+    // width: $rightCircleDiameter * 1vw;
+    // transform: translate(-$rightCircleRadius * 1vw, -$rightCircleRadius * 1vw);
+}
+
+.playlist {
+    position:absolute;
+    background-color: $primary;
+
+    left:88vw;
+    top: $playTop*1vh;
+}
+
+.services {
+    position:absolute;
+    background-color: $primary;
+
+    left:80vw;
+    top: calc(#{$playTop*1vh} + #{$playRadius*1vw} + 5vh);
+}
+
+#curved-volume {
+    position: absolute;
+    height: $audioSliderHeight*1vw;
+    width: $audioSliderHeight*1vw;
+    
+    top: calc(#{$playTop *1vh} - #{($audioSliderHeight / 2) * 1vw});
+    // left:$playLeft*1vw;
+    left: calc(20vw - #{($audioSliderHeight/2)*1vw});
+    // left: 10vw;
+}
+
+@media (orientation:landscape) {
+    .play {
+        // height: $playDiameter*1vw;
+        // width: $playDiameter*1vw;
+        max-width: 90vh;
+        max-height: 90vh;
+        top:$playTop*1vh ;
+    }
+    #curved-volume {
+        // height: $audioSliderHeight*1vw;
+        // width: $audioSliderHeight*1vw;
+        height: 1001vh;
+        width: 100vh;
+        // 
+        // top: calc(#{$playTop *1vh} - #{(100 / 2) * 1vh});
+        top:0;
+        left: calc(20vw - #{(100/2)*1vh});
+        max-width: 100vh;
+        max-height: 100vh;
+
+    }
+    
+    .options {
+        top: calc(#{$playTop*1vh} - #{$playRadius*1vh} - 5vh);
+    }
+
+    .services {
+        top: calc(#{$playTop*1vh} + #{$playRadius*1vh} + 5vh);
+    }
+    
+    .rightCircle {
+        height: $rightCircleDiameter * 1vh;
+        width: $rightCircleDiameter * 1vh;
+        transform: translate(-$rightCircleRadius * 1vh, -$rightCircleRadius * 1vh);
+    }
+}
+
+.center {
+    // position: relative;
+    // left: -50%;
+    // top: -50%;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.primaryText {
+    color: $primary-text;
+}
+
+.backdrop {
+    position: absolute;
+    z-index: $layer-backdrop;
+    background: lightgray;
+    
+    opacity: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+}
+
+
+.focused {
+    z-index: $layer-focus;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
+    width: 90vh;
+    height: 90vh;
+    border-radius: 5%;
+}
+
+.backdrop.active {
+    opacity: 0.7;
+    pointer-events: all;
+}
