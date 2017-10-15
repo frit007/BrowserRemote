@@ -6,41 +6,16 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var mysql = require('mysql');
+var fs = require('fs');
 
 var users = require('./routes/users');
 
 var app = express();
 
-require('dotenv').config();
-
-var prefix = process.env.DB_PREFIX || "DB_"
-function getDBEnv(envName) {
-	return process.env[prefix + envName];
-}
+var config = require('./modules/config');
 
 
 
-var config = {
-	db: {
-		host: getDBEnv("HOST"),
-		user: getDBEnv("USER"),
-		password: getDBEnv("PASSWORD"),
-		database: getDBEnv("DB"),
-		connnectionLimit: getDBEnv("CONNECION_LIMIT") || 10,
-	},
-	port: process.env.HTTP_PORT || 3000,
-	socketPort: process.env.SOCKET_PORT || 3100,
-	googleOauth: {
-		clientId: process.env.GOOGLEOAUTH_CLIENT_ID,
-		clientSecret: process.env.GOOGLEOAUTH_CLIENT_SECRET
-	},
-	serverName: process.env.SERVERNAME,
-	session: {
-		secret: process.env.SESSION_SECRET
-	},
-	no_network: process.env.NO_NETWORK || false,
-	debug: true
-}
 
 /*---------------- SETUP SESSION ----------------*/
 var expressSession = require('express-session');
@@ -141,8 +116,24 @@ var http = require('http');
 
 var server = http.createServer(app);
 
-
 /*END OF HTTP SETUP */
+
+/* START HTTPS */
+
+if (config.https.enabled) {
+	var privateKey = fs.readFileSync( config.https.keyPath );
+	var certificate = fs.readFileSync( config.https.certPath );
+
+	https = require('https');
+	
+	https.createServer({
+		key: privateKey,
+		certificate 
+	}, app).listen(config.https.port, function() {
+		console.log("https listening on port:", config.https.port);
+	})
+}
+
 /* START SOCKET SETUP */
 
 var socket = require('socket.io')(server);
